@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ubuminzi Rwanda · Rwanda Agriculture</title>
+<style>
+  :root{--em:#1b6b3e;--em-d:#14532d;--amber:#e5a93c;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:#f6faf7;min-height:100vh}
+  .bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
+  .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease,transform 7s linear;transform:scale(1.08)}
+  .bg img.on{opacity:1;transform:scale(1)}
+  .scrim{position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(20,83,45,.35),rgba(0,0,0,.45),rgba(20,83,45,.55))}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px 60px}
+  header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:12px 18px}
+  .logo{width:38px;height:38px;border-radius:10px;background:var(--em);color:#fff;display:grid;place-items:center;font-weight:800}
+  .brand{font-weight:800;font-size:18px}
+  .brand span{color:var(--em)}
+  .spacer{flex:1}
+  .lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .lang button{padding:4px 12px;font-size:12px;font-weight:700;background:#fff;border:0;cursor:pointer;color:var(--mut)}
+  .lang button.on{background:var(--em);color:#fff}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 10px 30px rgba(15,23,42,.06);margin-top:18px}
+  h1{font-size:26px;letter-spacing:-.5px}
+  h2{font-size:18px;margin-bottom:12px}
+  p.lead{color:var(--mut);margin-top:8px}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;font-weight:700;border-radius:10px;padding:11px 16px;background:var(--em);color:#fff}
+  .btn.sec{background:#fff;color:var(--em);border:1px solid var(--em)}
+  .btn.amber{background:var(--amber);color:#3a2a05}
+  label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px;font-weight:600}
+  input,select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:14px;background:#fff}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .stat{flex:1;min-width:140px;background:linear-gradient(135deg,var(--em),var(--em-d));color:#fff;border-radius:14px;padding:16px}
+  .stat .v{font-size:24px;font-weight:800}.stat .l{font-size:12px;opacity:.85}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}
+  th{font-size:11px;text-transform:uppercase;color:var(--mut)}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+  .pill.ok{background:rgba(27,107,62,.12);color:var(--em)}
+  .pill.pend{background:rgba(229,169,60,.18);color:#8a5a12}
+  .err{color:#b91c1c;font-size:13px;margin-top:10px}
+  .ok{color:var(--em);font-size:13px;margin-top:10px}
+  .hint{font-size:12px;color:var(--mut);margin-top:8px}
+  .tabs{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .tabs button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;font-size:13px}
+  .tabs button.on{background:var(--em);color:#fff;border-color:var(--em)}
+  .hidden{display:none}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.3s;z-index:20;pointer-events:none}
+  .toast.show{opacity:1}
+  .db{font-size:11px;color:var(--mut);margin-top:14px}
+  .db b{color:var(--em)}
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="scrim"></div>
+
+<header><div class="bar">
+  <div class="logo">U</div>
+  <div class="brand">Ubu<span>minzi</span> Rwanda</div>
+  <div class="spacer"></div>
+  <div class="lang"><button data-l="en" class="on">EN</button><button data-l="rw">RW</button></div>
+  <button class="btn sec" id="logoutBtn" style="padding:8px 12px">Logout</button>
+</div></header>
+
+<div class="wrap">
+  <!-- AUTH VIEW -->
+  <section id="viewAuth">
+    <div class="card">
+      <h1 id="heroTitle">Digital platform for Rwandan farmers</h1>
+      <p class="lead" id="heroSub">Bookkeeping, market prices, weather, learning and subscription payments — with a slideshow of Rwanda's farming and farmers.</p>
+      <div class="tabs">
+        <button data-tab="login" class="on" id="tabLogin">Sign in</button>
+        <button data-tab="register" id="tabRegister">Register</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="paneLogin" class="pane">
+        <label>Email</label><input id="loginEmail" placeholder="marie@example.rw" />
+        <label>Password</label><input id="loginPwd" type="password" />
+        <p class="hint" id="loginHint">Your password is the last digit of your phone number followed by rwanda2026.</p>
+        <div class="row"><button class="btn" id="doLogin">Sign in</button></div>
+        <p class="err" id="loginErr"></p>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="paneRegister" class="pane hidden">
+        <label>Full name</label><input id="regName" placeholder="Uwase Marie" />
+        <div class="grid2">
+          <div><label>Email</label><input id="regEmail" placeholder="marie@example.rw" /></div>
+          <div><label>Phone</label><input id="regPhone" placeholder="0788123456" /></div>
+        </div>
+        <div class="grid2">
+          <div><label>District</label><select id="regDistrict"></select></div>
+          <div><label>Sector</label><input id="regSector" placeholder="Muhoza" /></div>
+        </div>
+        <div class="row"><button class="btn" id="doRegister">Create account</button></div>
+        <p class="hint" id="regHint"></p>
+        <p class="err" id="regErr"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTAL VIEW -->
+  <section id="viewPortal" class="hidden">
+    <div class="card">
+      <h2 id="welcome">Welcome</h2>
+      <p class="lead" id="farmerMeta"></p>
+      <div class="row">
+        <div class="stat"><div class="v" id="sIncome">0 RWF</div><div class="l">Income</div></div>
+        <div class="stat"><div class="v" id="sExpense">0 RWF</div><div class="l">Expenses</div></div>
+        <div class="stat"><div class="v" id="sProfit">0 RWF</div><div class="l">Profit</div></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button data-p="books" class="on">Bookkeeping</button>
+      <button data-p="billing">Subscription</button>
+    </div>
+
+    <!-- BOOKS -->
+    <div id="paneBooks" class="card pane">
+      <h2>Add a record</h2>
+      <div class="grid2">
+        <div><label>Type</label><select id="bkType"><option value="income">Income</option><option value="expense">Expense</option></select></div>
+        <div><label>Crop</label><select id="bkCrop"></select></div>
+      </div>
+      <div class="grid2">
+        <div><label>Quantity</label><input id="bkQty" inputmode="numeric" placeholder="0" /></div>
+        <div><label>Unit price (RWF)</label><input id="bkPrice" inputmode="numeric" placeholder="0" /></div>
+      </div>
+      <label>Party / description</label><input id="bkParty" placeholder="Musanze cooperative" />
+      <div class="row"><button class="btn" id="doAddRecord">Add</button></div>
+      <table style="margin-top:16px"><thead><tr><th>Date</th><th>Crop</th><th>Party</th><th style="text-align:right">Amount</th></tr></thead><tbody id="bkRows"></tbody></table>
+    </div>
+
+    <!-- BILLING -->
+    <div id="paneBilling" class="card pane hidden">
+      <h2>Subscription · 5,000 RWF / month</h2>
+      <label>Payment method</label><select id="payMethod"><option value="momo">MTN Mobile Money</option><option value="airtel">Airtel Money</option></select>
+      <label>Transaction ID</label><input id="payTxn" placeholder="MOMO8841203" />
+      <label>Confirm password</label><input id="payPwd" type="password" placeholder="last digit + rwanda2026" />
+      <p class="hint">Every payment must be confirmed with your default password: the last digit of your phone number followed by <b>rwanda2026</b>.</p>
+      <div class="row"><button class="btn amber" id="doPay">Submit payment</button></div>
+      <p class="err" id="payErr"></p><p class="ok" id="payOk"></p>
+      <h2 style="margin-top:22px">Payment history</h2>
+      <table><thead><tr><th>Date</th><th>Method</th><th>Txn</th><th>Status</th></tr></thead><tbody id="payRows"></tbody></table>
+      <p class="db" id="dbStatus">Database: <b>local</b> · syncing to Supabase…</p>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL="https://uyrjvysjwzgmxqkmpmut.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5cmp2eXNqd3pnbXhxa21wbXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMDE0ODIsImV4cCI6MjEwODU3NzQ4Mn0.WSdx_G1apZ6Dbn-5_mPkwbG8WK_eeNmG-EGrqa7Md3M";
+const IMAGES=[
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-terraced-hills-3863b926-1793114791079.webp",
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-maize-farmers-57d012dd-1793114782576.webp",
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-coffee-harvest-86825b59-1793114782756.webp",
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-tea-pickers-dd0f2600-1793114782593.webp",
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-market-women-1f6bcdda-1793114782409.webp",
+"https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/08d11f00-1530-4ef4-946f-8d73d3a6b3a1/rwanda-irrigation-dawn-08c4b279-1793114786921.webp"];
+const DISTRICTS=["Gasabo","Nyarugenge","Kicukiro","Musanze","Huye","Rubavu","Nyamasheke","Kirehe"];
+const CROPS=["Maize","Beans","Irish Potato","Rice","Wheat","Cassava","Coffee","Tea","Banana","Soybean","Sweet Potato","Groundnut","Irish Banana"];
+const SUFFIX="rwanda2026";
+const L={en:{welcome:"Welcome",income:"Income",expense:"Expenses",profit:"Profit",added:"Record added",paid:"Payment submitted — pending admin approval",badPwd:"Incorrect confirmation password",needFields:"Fill all required fields",badEmail:"Enter a valid email",badPhone:"Enter a valid Rwandan phone",reg:"Account created. Your password is",synced:"Database: Supabase synced",local:"Database: saved locally (offline)"},
+rw:{welcome:"Murakaza neza",income:"Amafaranga yinjiye",expense:"Amavunjwe",profit:"Inyungu",added:"Umwandiko wongeweho",paid:"Ubwishyu bwoherejwe — burindiriye",badPwd:"Ijambo ry'ibanga si ryo",needFields:"Uzuza ibisabwa byose",badEmail:"Andika imeyili yemewe",badPhone:"Andika telefone yo mu Rwanda",reg:"Konti yaremwe. Ijambo ry'ibanga ni",synced:"Ububiko: Supabase",local:"Ububiko: byabitswe hano"}};
+
+// ---- persistence (database set to update) ----
+const DB_KEY="rwagri_db_v1";
+function load(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{farmers:[],records:[],payments:[]}}catch(e){return{farmers:[],records:[],payments:[]}}}
+function save(db){localStorage.setItem(DB_KEY,JSON.stringify(db))}
+let db=load(); if(!db.farmers)db={farmers:[],records:[],payments:[]};
+let session=localStorage.getItem("rwagri_session")||null;
+let lang="en";
+const t=(k)=>L[lang][k]||L.en[k]||k;
+const pwdFor=(phone)=>{const d=(phone||"").replace(/\D/g,"");return (d.slice(-1)||"0")+SUFFIX;};
+const uid=()=>"id-"+Date.now()+"-"+Math.floor(Math.random()*1e4);
+const money=(n)=>Math.round(n).toLocaleString()+" RWF";
+const today=()=>new Date().toISOString().slice(0,10);
+
+async function upsert(table,row){
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/${table}?on_conflict=id`,{method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SUPA_KEY,"Authorization":"Bearer "+SUPA_KEY,"Prefer":"resolution=merge-duplicates,return=minimal"},
+      body:JSON.stringify(row)});
+    setDb(r.ok?t("synced"):t("local"));
+  }catch(e){setDb(t("local"));}
+}
+function setDb(txt){const el=document.getElementById("dbStatus");if(el)el.innerHTML="Database: <b>"+txt+"</b>";}
+
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2600);}
+
+// ---- slideshow ----
+(function(){const bg=document.getElementById("bg");IMAGES.forEach((u,i)=>{const img=document.createElement("img");img.src=u;if(i===0)img.className="on";bg.appendChild(img);});
+  let i=0;setInterval(()=>{const imgs=bg.children;imgs[i].className="";i=(i+1)%IMAGES.length;imgs[i].className="on";},6000);})();
+
+// ---- view routing ----
+function show(view){document.getElementById("viewAuth").classList.toggle("hidden",view!=="auth");document.getElementById("viewPortal").classList.toggle("hidden",view!=="portal");}
+function render(){if(session){show("portal");renderPortal();}else{show("auth");}}
+
+function currentFarmer(){return db.farmers.find(f=>f.id===session)||null;}
+
+// ---- register ----
+function fillSelects(){
+  const d=document.getElementById("regDistrict");d.innerHTML=DISTRICTS.map(x=>`<option>${x}</option>`).join("");
+  const c=document.getElementById("bkCrop");c.innerHTML=CROPS.map(x=>`<option>${x}</option>`).join("");
+}
+document.getElementById("doRegister").onclick=()=>{
+  const name=regName.value.trim(),email=regEmail.value.trim().toLowerCase(),phone=regPhone.value.trim(),district=regDistrict.value,sector=regSector.value.trim();
+  const err=document.getElementById("regErr");err.textContent="";
+  if(!name||!phone||!sector){err.textContent=t("needFields");return;}
+  if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent=t("badEmail");return;}
+  if(!/^(\+?25)?0?7[0-9]{8}$/.test(phone.replace(/\s/g,""))){err.textContent=t("badPhone");return;}
+  const farmer={id:uid(),fullName:name,email,phone,district,sector,crop:"Maize",status:"pending",joined:today(),revenue:0,password:pwdFor(phone)};
+  db.farmers.push(farmer);save(db);upsert("farmers",{id:farmer.id,full_name:farmer.fullName,email:farmer.email,phone:farmer.phone,district:farmer.district,sector:farmer.sector,crop:farmer.crop,status:farmer.status,joined:farmer.joined,revenue:farmer.revenue,password:farmer.password});
+  document.getElementById("regHint").textContent=t("reg")+": "+pwdFor(phone);
+  toast(t("reg")+": "+pwdFor(phone));
+  session=farmer.id;localStorage.setItem("rwagri_session",session);render();
+};
+
+// ---- login ----
+document.getElementById("doLogin").onclick=()=>{
+  const email=loginEmail.value.trim().toLowerCase(),err=document.getElementById("loginErr");err.textContent="";
+  const f=db.farmers.find(x=>x.email===email);
+  if(!f||pwdFor(f.phone)!==loginPwd.value.trim()){err.textContent=t("badPwd");return;}
+  session=f.id;localStorage.setItem("rwagri_session",session);render();
+};
+
+// ---- logout ----
+document.getElementById("logoutBtn").onclick=()=>{session=null;localStorage.removeItem("rwagri_session");show("auth");};
+
+// ---- tabs (auth) ----
+document.querySelectorAll("#viewAuth .tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#viewAuth .tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  const login=b.dataset.tab==="login";document.getElementById("paneLogin").classList.toggle("hidden",!login);document.getElementById("paneRegister").classList.toggle("hidden",login);
+});
+// ---- tabs (portal) ----
+document.querySelectorAll("#viewPortal .tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#viewPortal .tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  const books=b.dataset.p==="books";document.getElementById("paneBooks").classList.toggle("hidden",!books);document.getElementById("paneBilling").classList.toggle("hidden",books);
+});
+// ---- lang ----
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.l;document.querySelectorAll(".lang button").forEach(x=>x.classList.toggle("on",x===b));renderPortal();});
+
+// ---- records ----
+document.getElementById("doAddRecord").onclick=()=>{
+  const f=currentFarmer();if(!f)return;
+  const q=Number(bkQty.value)||0,p=Number(bkPrice.value)||0,amt=q>0&&p>0?q*p:(p||q);
+  if(!amt||!bkParty.value.trim()){toast(t("needFields"));return;}
+  const rec={id:uid(),farmerId:f.id,type:bkType.value,crop:bkCrop.value,quantity:q,unitPrice:p,amount:amt,party:bkParty.value.trim(),date:today()};
+  db.records.push(rec);save(db);upsert("farm_records",{id:rec.id,farmer_id:rec.farmerId,type:rec.type,crop:rec.crop,quantity:rec.quantity,unit_price:rec.unitPrice,amount:rec.amount,party:rec.party,date:rec.date});
+  bkQty.value="";bkPrice.value="";bkParty.value="";toast(t("added"));renderPortal();
+};
+
+// ---- payment confirmation (requires derived password) ----
+document.getElementById("doPay").onclick=()=>{
+  const f=currentFarmer();if(!f)return;
+  const err=document.getElementById("payErr"),ok=document.getElementById("payOk");err.textContent="";ok.textContent="";
+  if(payTxn.value.trim().length<6){err.textContent=t("needFields");return;}
+  if(pwdFor(f.phone)!==payPwd.value.trim()){err.textContent=t("badPwd");return;}
+  const p={id:uid(),farmerId:f.id,amount:5000,method:payMethod.value,txnId:payTxn.value.trim().toUpperCase(),status:"pending",date:today()};
+  db.payments.push(p);save(db);upsert("payment_requests",{id:p.id,farmer_id:p.farmerId,amount:p.amount,method:p.method,txn_id:p.txnId,status:p.status,date:p.date});
+  payTxn.value="";payPwd.value="";ok.textContent=t("paid");toast(t("paid"));renderPortal();
+};
+
+function renderPortal(){
+  const f=currentFarmer();if(!f){show("auth");return;}
+  document.getElementById("welcome").textContent=t("welcome")+", "+f.fullName;
+  document.getElementById("farmerMeta").textContent=f.district+" · "+f.sector+" · "+f.phone;
+  const mine=db.records.filter(r=>r.farmerId===f.id);
+  const inc=mine.filter(r=>r.type==="income").reduce((s,r)=>s+r.amount,0);
+  const exp=mine.filter(r=>r.type==="expense").reduce((s,r)=>s+r.amount,0);
+  document.getElementById("sIncome").textContent=money(inc);
+  document.getElementById("sExpense").textContent=money(exp);
+  document.getElementById("sProfit").textContent=money(inc-exp);
+  document.getElementById("bkRows").innerHTML=mine.slice(-8).reverse().map(r=>`<tr><td>${r.date}</td><td>${r.crop}</td><td>${r.party}</td><td style="text-align:right;color:${r.type==="income"?"#1b6b3e":"#b91c1c"}">${r.type==="income"?"+":"−"}${money(r.amount)}</td></tr>`).join("");
+  const myPay=db.payments.filter(p=>p.farmerId===f.id);
+  document.getElementById("payRows").innerHTML=myPay.length?myPay.slice().reverse().map(p=>`<tr><td>${p.date}</td><td>${p.method}</td><td>${p.txnId}</td><td><span class="pill ${p.status==="approved"?"ok":"pend"}">${p.status}</span></td></tr>`).join(""):`<tr><td colspan="4" style="color:#64748b">No payments yet</td></tr>`;
+}
+
+fillSelects();render();
+</script>
+</body>
+</html>
